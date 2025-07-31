@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Customer {
+  id           String   @id @default(cuid())
+  mobileNumber String   @unique
+  name         String?
+  email        String?
+  address      String?
+  city         String?
+  state        String?
+  pincode      String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships
+  products     CustomerProduct[]
+  otps         OtpVerification[]
+  orders       Order[]
+
+  @@map("customers")
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  serialNumber String   @unique
+  modelNumber  String
+  brand        String
+  category     String
+  name         String
+  description  String?
+  purchaseDate DateTime?
+  warrantyEnd  DateTime?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relationships
+  customers    CustomerProduct[]
+  spareParts   SparePart[]
+
+  @@map("products")
+}
+
+model CustomerProduct {
+  id         String   @id @default(cuid())
+  customerId String
+  productId  String
+  createdAt  DateTime @default(now())
+
+  // Relationships
+  customer   Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([customerId, productId])
+  @@map("customer_products")
+}
+
+model SparePart {
+  id          String   @id @default(cuid())
+  productId   String
+  partNumber  String   @unique
+  name        String
+  description String?
+  price       Float
+  stock       Int      @default(0)
+  imageUrl    String?
+  category    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  orderItems  OrderItem[]
+
+  @@map("spare_parts")
+}
+
+model OtpVerification {
+  id           String   @id @default(cuid())
+  customerId   String?
+  mobileNumber String
+  otp          String
+  isVerified   Boolean  @default(false)
+  isExpired    Boolean  @default(false)
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  // Relationships
+  customer     Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@map("otp_verifications")
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  customerId   String
+  orderNumber  String      @unique
+  status       OrderStatus @default(PENDING)
+  totalAmount  Float
+  shippingAddress String?
+  notes        String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relationships
+  customer     Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items        OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String @id @default(cuid())
+  orderId     String
+  sparePartId String
+  quantity    Int
+  price       Float
+  
+  // Relationships
+  order       Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  sparePart   SparePart @relation(fields: [sparePartId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
