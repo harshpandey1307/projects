@@ -1,0 +1,44 @@
+{
+  "app": {
+    "title": "Spare Parts Store",
+    "welcome": "Welcome to Spare Parts Store"
+  },
+  "language": {
+    "select": "Select Language",
+    "english": "English",
+    "hindi": "हिंदी",
+    "marathi": "मराठी",
+    "gujarati": "ગુજરાતી",
+    "telugu": "తెలుగు",
+    "tamil": "தமிழ்",
+    "kannada": "ಕನ್ನಡ",
+    "malayalam": "മലയാളം",
+    "bengali": "বাংলা",
+    "punjabi": "ਪੰਜਾਬੀ"
+  },
+  "login": {
+    "title": "Customer Login",
+    "subtitle": "Enter your product details to access our spare parts catalog",
+    "serialNumber": "Product Serial Number",
+    "serialPlaceholder": "Enter your product serial number",
+    "mobileNumber": "Mobile Number",
+    "mobilePlaceholder": "Enter your registered mobile number",
+    "sendOtp": "Send OTP",
+    "verifyOtp": "Verify OTP",
+    "otpPlaceholder": "Enter 6-digit OTP",
+    "resendOtp": "Resend OTP",
+    "login": "Login"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidMobile": "Please enter a valid 10-digit mobile number",
+    "invalidSerial": "Please enter a valid serial number",
+    "invalidOtp": "Please enter a valid 6-digit OTP"
+  },
+  "messages": {
+    "otpSent": "OTP sent successfully to your mobile number",
+    "otpVerified": "OTP verified successfully",
+    "loginSuccess": "Login successful! Welcome to our store",
+    "error": "An error occurred. Please try again."
+  }
+}
